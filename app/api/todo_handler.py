@@ -30,11 +30,12 @@ def create_todo(payload: TodoCreate, service: TodoService = Depends(get_todo_ser
 def read_todo(todo_id: int, service: TodoService = Depends(get_todo_service)):
     try:
         return service.get_task(todo_id)
-    except ValueError as e:
-        error_message = str(e)
-        if "must be positive" in error_message:
-            raise HTTPException(status_code=400, detail=error_message)
+    except errors.ValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except errors.NotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @router.get("/")
 def read_todos(skip: int = 0, limit: int = 10, service: TodoService = Depends(get_todo_service)):
