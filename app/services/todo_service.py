@@ -22,6 +22,7 @@ class TodoService:
         data.title = clean_title
         todo = await self.repo.create(data, user_id)
         await self.session.commit()
+        await self.session.refresh(todo)
         return todo
 
     async def get_task(self, todo_id: int, user_id: uuid.UUID):

@@ -13,7 +13,6 @@ class TodoRepository:
         db_obj = Todo(**obj_in.model_dump(), user_id=user_id)
         self.db.add(db_obj)
         await self.db.flush()
-        await self.db.refresh(db_obj)
         return db_obj
 
     async def get_by_id(self, todo_id: int, user_id: uuid.UUID) -> Todo | None:
