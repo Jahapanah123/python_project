@@ -44,3 +44,14 @@ class TodoRepository:
     async def delete(self, db_obj: Todo) -> None:
         await self.db.delete(db_obj)
         await self.db.flush()
+        
+    async def mark_completed(self, todo_id: int, user_id: uuid.UUID) -> Todo | None:
+        todo = await self.get_by_id(todo_id, user_id)
+        
+        if not todo:
+            return None
+        
+        todo.is_completed = True
+        await self.db.commit()
+        await self.db.refresh(todo)
+        return todo

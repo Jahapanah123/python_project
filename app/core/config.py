@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 5
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+    EMAIL_API_KEY: str
+    EMAIL_FROM: str
+    EMAIL_PROVIDER_URL: str
 
     model_config = SettingsConfigDict(
         env_file=".env",
