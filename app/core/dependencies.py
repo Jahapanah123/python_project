@@ -9,6 +9,7 @@ from app.repository.user_repo import UserRepository
 from app.schemas.auth import UserResponse
 from app.services.auth_service import AuthService
 from utils.errors import InvalidTokenError, TokenExpiredError, UserNotFoundError, UserInactiveError
+from app.models.user import User
 
 bearer_scheme = HTTPBearer(auto_error=True)
 
@@ -21,7 +22,7 @@ def get_auth_service(db: AsyncSession = Depends(get_db)) -> AuthService:
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     service: AuthService = Depends(get_auth_service),
-) -> UserResponse:
+) -> User:
     token = credentials.credentials
     
     try:

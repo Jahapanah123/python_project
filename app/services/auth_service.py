@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.user import User
 
 from app.core.security import (
     create_access_token,
@@ -95,7 +96,7 @@ class AuthService:
 
         return MessageResponse(message="Logged out successfully.")
 
-    async def get_current_user(self, access_token: str) -> UserResponse:
+    async def get_current_user(self, access_token: str) -> User:
         payload = decode_access_token(access_token)
         user_id_str: str = payload["sub"]
 
@@ -105,12 +106,15 @@ class AuthService:
             raise InvalidTokenError("Token subject is not a valid UUID.")
 
         user = await self.repo.get_user_by_id(user_id)
+        print("AUTH USER:", user)
+        print("AUTH USER ID:", user.id if user else None)
+        print("AUTH USER ACTIVE:", user.is_active if user else None)
         if user is None:
             raise UserNotFoundError("User not found.")
         if not user.is_active:
             raise UserInactiveError("Account is deactivated.")
 
-        return UserResponse.model_validate(user)
+        return user
 
     async def _issue_tokens(self, user) -> TokenResponse:
         raw_refresh_token = generate_opaque_refresh_token()

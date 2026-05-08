@@ -10,3 +10,10 @@ services:
       - POSTGRES_DB=todo_db
     ports:
       - "5433:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: todo_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.user import User
 
 from app.db.session import get_db
 from app.repository.user_repo import UserRepository
@@ -89,6 +90,6 @@ async def logout(
 
 @router.get("/me", response_model=UserResponse)
 async def get_me(
-    current_user: UserResponse = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ) -> UserResponse:
     return current_user

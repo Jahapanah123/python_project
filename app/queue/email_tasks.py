@@ -1,22 +1,26 @@
-from app.core.celery_app import celery_app
-from app.services.email_service import send_email
+from app.queue.celery_app import celery_app
+from app.services.email_service import EmailService
 
 
-@celery_app.task(bind=True, max_retries=3, name="send_email_task")
-def send_email_task(
+@celery_app.task(
+    bind=True,
+    max_retries=3,
+    name="send_todo_completed_email",
+)
+def send_todo_completed_email(
     self,
     to_email: str,
-    subject: str,
-    body: str,
+    title: str,
 ) -> None:
 
     retry_delays = [1, 5, 10]
 
+    email_service = EmailService()
+
     try:
-        send_email(
+        email_service.send_todo_completed_email(
             to_email=to_email,
-            subject=subject,
-            body=body,
+            title=title,
         )
 
     except Exception as exc:

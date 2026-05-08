@@ -15,15 +15,27 @@ if TYPE_CHECKING:
 class Todo(Base):
     __tablename__ = "todos"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
 
-    title: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        index=True,
+    )
 
-    description: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    description: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
 
     is_completed: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
+        server_default="false",
         nullable=False,
     )
 
